@@ -148,6 +148,7 @@ jobs:
 | `content-type` | warning | Served as `text/plain` or `text/markdown` (URLs) |
 | `redirect` | info | `/llms.txt` does not redirect (URLs) |
 | `link-reachable` | error | Every link responds (`--links`) |
+| `link-blocked` | warning | A site refused the automated check (401, 403, 429, LinkedIn's 999), so confirm it in a browser (`--links`) |
 | `markdown-versions` | info | Linked pages offer a `.md` version (`--markdown`) |
 
 Turn any rule off with `--disable rule-id`.
