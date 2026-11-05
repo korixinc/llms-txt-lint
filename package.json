@@ -1,6 +1,6 @@
 {
   "name": "llms-txt-lint",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lint llms.txt files against the llmstxt.org spec. Catches broken structure, dead links and misconfigured servers. CLI, Node API and GitHub Action.",
   "main": "src/index.js",
   "bin": {

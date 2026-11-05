@@ -2,6 +2,10 @@
 
 All notable changes are listed here. This project follows [Semantic Versioning](https://semver.org).
 
+## [1.0.1] - 2026-11-05
+
+- No code changes. Releases now publish through npm trusted publishing (OIDC) with automatic provenance. No npm token is stored in the repo.
+
 ## [1.0.0] - 2026-11-05
 
 First release.
@@ -14,4 +18,5 @@ First release.
 - Node API: `lint()` and `lintText()`.
 - Zero dependencies, Node 18+.
 
+[1.0.1]: https://github.com/korixinc/llms-txt-lint/releases/tag/v1.0.1
 [1.0.0]: https://github.com/korixinc/llms-txt-lint/releases/tag/v1.0.0
