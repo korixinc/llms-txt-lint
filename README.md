@@ -18,12 +18,11 @@ llms.txt
 
    1: error    The H1 title must be the first thing in the file.  h1-required
    4: error    Extra H1 "Acme Docs". Use "##" for sections.  h1-single
-  16: error    List item is not in "- [name](url): notes" form.  link-format
   17: error    Invalid URL "setup.html". Relative URLs need --base-url when linting a local file.  link-url-valid
   20: error    Link has empty name.  link-format
   24: error    Code fence is never closed. Everything after it is ignored.  unclosed-code-fence
 
-✖ 6 errors, 9 warnings, 1 suggestion
+✖ 5 errors, 10 warnings, 1 suggestion
 ```
 
 ## Why
@@ -134,7 +133,8 @@ jobs:
 | `no-deep-headings` | warning | Only H1 and H2 are used |
 | `section-has-links` | warning | Each H2 section has links |
 | `section-list-only` | warning | Sections contain list items, not paragraphs |
-| `link-format` | error | Items are `- [name](url): notes` |
+| `link-format` | error | Links are well formed `- [name](url): notes` |
+| `section-plain-items` | warning | Section list items are links, not plain text |
 | `link-url-valid` | error | URLs are valid http(s) |
 | `link-https` | warning | Links use https |
 | `link-duplicate` | warning | No URL listed twice |

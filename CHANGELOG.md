@@ -6,7 +6,7 @@ All notable changes are listed here. This project follows [Semantic Versioning](
 
 First release.
 
-- 18 static rules covering the llmstxt.org spec: H1 title, summary blockquote, heading levels, file list format, URL validity, duplicates, the `Optional` section, code fences, size and HTML misconfiguration.
+- 19 static rules covering the llmstxt.org spec: H1 title, summary blockquote, heading levels, file list format, URL validity, duplicates, the `Optional` section, code fences, size and HTML misconfiguration.
 - Network checks: `--links` for dead links (HEAD with GET fallback), `--markdown` for `.md` page versions, content type and redirect checks for remote files.
 - Lint a local file, a URL or a bare domain.
 - Output formats: `stylish`, `json`, and `github` (inline PR annotations).
