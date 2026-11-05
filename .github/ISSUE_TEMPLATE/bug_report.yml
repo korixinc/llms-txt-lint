@@ -1,0 +1,29 @@
+name: Wrong result or bug
+description: The linter reported something wrong, missed a problem, or crashed
+labels: [bug]
+body:
+  - type: input
+    id: target
+    attributes:
+      label: URL or file
+      description: The llms.txt you linted (a URL is easiest)
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command
+      placeholder: npx llms-txt-lint example.com --links
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened and what you expected
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versions
+      placeholder: llms-txt-lint 1.0.0, Node 22, macOS

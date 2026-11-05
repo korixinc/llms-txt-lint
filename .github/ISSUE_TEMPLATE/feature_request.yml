@@ -1,0 +1,15 @@
+name: Rule or feature idea
+description: Suggest a new check or option
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this catch?
+      description: A real example helps a lot
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed rule or behaviour
