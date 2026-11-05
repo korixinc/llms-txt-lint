@@ -1,0 +1,25 @@
+Welcome to our site
+
+# Acme
+# Acme Docs
+
+### Getting started
+
+## Optional
+
+- [Changelog](https://acme.dev/changelog)
+
+## Guides
+
+Read these first.
+
+- Install guide
+- [Setup](setup.html)
+- [API](http://acme.dev/api)
+- [API again](http://acme.dev/api#top)
+- [](https://acme.dev/empty)
+
+## guides
+
+```js
+console.log('never closed')
