@@ -27,6 +27,7 @@ test('broken file reports every expected rule', async () => {
     'optional-last',
     'section-list-only',
     'link-format',
+    'section-plain-items',
     'link-url-valid',
     'link-https',
     'link-duplicate',
@@ -37,6 +38,17 @@ test('broken file reports every expected rule', async () => {
     assert.ok(ids(r).includes(id), `expected ${id}`);
   }
   assert.ok(r.stats.error > 0);
+});
+
+test('plain bullets are a warning, malformed links are an error', async () => {
+  const text = '# T\n\n> A useful summary for the project.\n\n## Notes\n\n- just a note\n- another note\n\n## Docs\n\n- [Broken(https://a.dev)\n- [Good](https://b.dev): fine\n';
+  const r = await lintText(text);
+  const plain = r.findings.filter((f) => f.rule === 'section-plain-items');
+  const bad = r.findings.filter((f) => f.rule === 'link-format');
+  assert.equal(plain.length, 1);
+  assert.match(plain[0].message, /2 list items/);
+  assert.equal(bad.length, 1);
+  assert.equal(bad[0].line, 12);
 });
 
 test('empty file', async () => {
