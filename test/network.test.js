@@ -33,6 +33,8 @@ test.before(async () => {
       case '/html/llms.txt': return send(200, 'text/html', '<!doctype html><html></html>');
       case '/guide': return send(200, 'text/html', '<p>guide</p>');
       case '/raw.md': return send(200, 'text/markdown', '# raw');
+      case '/blocked': return send(403, 'text/html', 'denied');
+      case '/anti-bot': return send(999, 'text/html', '');
       case '/head-not-allowed':
         if (req.method === 'HEAD') return send(405, 'text/plain', '');
         return send(200, 'text/html', 'ok');
@@ -93,6 +95,18 @@ test('HEAD 405 falls back to GET', async () => {
   const text = `# T\n\n> A useful summary for the project.\n\n## Docs\n\n- [A](${base}/head-not-allowed): x\n`;
   const r = await require('../src').lintText(text, { checkLinks: true });
   assert.equal(r.findings.filter((f) => f.rule === 'link-reachable').length, 0);
+});
+
+test('bot-blocked links are warnings, not errors', async () => {
+  const text = `# T\n\n> A useful summary for the project.\n\n## Docs\n\n- [A](${base}/blocked): x\n- [B](${base}/anti-bot): y\n- [C](${base}/missing): z\n`;
+  const r = await require('../src').lintText(text, { checkLinks: true });
+  const blocked = r.findings.filter((f) => f.rule === 'link-blocked');
+  const broken = r.findings.filter((f) => f.rule === 'link-reachable');
+  assert.equal(blocked.length, 2);
+  assert.ok(blocked.every((f) => f.severity === 'warning'));
+  assert.match(blocked[1].message, /HTTP 999/);
+  assert.equal(broken.length, 1);
+  assert.match(broken[0].message, /HTTP 404/);
 });
 
 test('CLI exit codes and json output', () => {
