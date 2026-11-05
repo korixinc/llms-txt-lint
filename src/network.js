@@ -3,7 +3,11 @@
 const { allLinks, resolve } = require('./rules');
 const pkg = require('../package.json');
 
-const USER_AGENT = `llms-txt-lint/${pkg.version} (+https://github.com/korixinc/llms-txt-lint)`;
+// Status codes that usually mean "bots not welcome" rather than "page missing".
+// 999 is LinkedIn's anti-bot response.
+const BLOCKED_STATUS = new Set([401, 403, 429, 999]);
+
+const USER_AGENT =`llms-txt-lint/${pkg.version} (+https://github.com/korixinc/llms-txt-lint)`;
 
 /**
  * Turn "example.com", "https://example.com" or "https://example.com/docs/llms.txt"
@@ -129,6 +133,17 @@ async function checkLinks(doc, ctx) {
     const r = results[i];
     if (r.ok) return;
     for (const l of unique.get(k)) {
+      if (BLOCKED_STATUS.has(r.status)) {
+        // Many sites (LinkedIn, Clutch, Cloudflare protected pages) refuse
+        // automated requests. That says nothing about whether the link works.
+        findings.push({
+          rule: 'link-blocked',
+          severity: 'warning',
+          line: l.line,
+          message: `Could not verify "${l.url}" (HTTP ${r.status}). The site blocks automated checks, so open it in a browser to confirm.`,
+        });
+        continue;
+      }
       findings.push({
         rule: 'link-reachable',
         severity: 'error',
