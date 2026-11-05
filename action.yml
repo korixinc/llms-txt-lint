@@ -1,0 +1,67 @@
+name: 'llms.txt lint'
+description: 'Validate an llms.txt file against the llmstxt.org spec, with optional dead link checks. Annotates problems inline on pull requests.'
+author: 'KORIX'
+branding:
+  icon: 'check-square'
+  color: 'purple'
+
+inputs:
+  path:
+    description: 'Path to llms.txt in the repo, or a URL / domain to fetch. Defaults to ./llms.txt or ./public/llms.txt.'
+    required: false
+    default: ''
+  links:
+    description: 'Check that every linked URL responds (true/false).'
+    required: false
+    default: 'false'
+  markdown:
+    description: 'Check that linked pages have a .md version (true/false). Implies links.'
+    required: false
+    default: 'false'
+  base-url:
+    description: 'Resolve relative links against this URL, e.g. https://example.com'
+    required: false
+    default: ''
+  max-tokens:
+    description: 'Warn when the file is larger than this many tokens (approximate).'
+    required: false
+    default: '10000'
+  max-warnings:
+    description: 'Fail the step when there are more warnings than this. Empty means warnings never fail.'
+    required: false
+    default: ''
+  disable:
+    description: 'Comma separated rule ids to turn off.'
+    required: false
+    default: ''
+  quiet:
+    description: 'Only report errors (true/false).'
+    required: false
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Lint llms.txt
+      shell: bash
+      env:
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_LINKS: ${{ inputs.links }}
+        INPUT_MARKDOWN: ${{ inputs.markdown }}
+        INPUT_BASE_URL: ${{ inputs.base-url }}
+        INPUT_MAX_TOKENS: ${{ inputs.max-tokens }}
+        INPUT_MAX_WARNINGS: ${{ inputs.max-warnings }}
+        INPUT_DISABLE: ${{ inputs.disable }}
+        INPUT_QUIET: ${{ inputs.quiet }}
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        args=(--format github)
+        [ -n "$INPUT_PATH" ] && args=("$INPUT_PATH" "${args[@]}")
+        [ "$INPUT_LINKS" = "true" ] && args+=(--links)
+        [ "$INPUT_MARKDOWN" = "true" ] && args+=(--markdown)
+        [ -n "$INPUT_BASE_URL" ] && args+=(--base-url "$INPUT_BASE_URL")
+        [ -n "$INPUT_MAX_TOKENS" ] && args+=(--max-tokens "$INPUT_MAX_TOKENS")
+        [ -n "$INPUT_MAX_WARNINGS" ] && args+=(--max-warnings "$INPUT_MAX_WARNINGS")
+        [ -n "$INPUT_DISABLE" ] && args+=(--disable "$INPUT_DISABLE")
+        [ "$INPUT_QUIET" = "true" ] && args+=(--quiet)
+        node "$ACTION_PATH/bin/llms-txt-lint.js" "${args[@]}"

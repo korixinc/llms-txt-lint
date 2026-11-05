@@ -1,0 +1,47 @@
+{
+  "name": "llms-txt-lint",
+  "version": "1.0.0",
+  "description": "Lint llms.txt files against the llmstxt.org spec. Catches broken structure, dead links and misconfigured servers. CLI, Node API and GitHub Action.",
+  "main": "src/index.js",
+  "bin": {
+    "llms-txt-lint": "bin/llms-txt-lint.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "lint:self": "node bin/llms-txt-lint.js test/fixtures/valid.txt"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "llms.txt",
+    "llms-txt",
+    "llmstxt",
+    "lint",
+    "linter",
+    "validator",
+    "ai",
+    "llm",
+    "seo",
+    "geo",
+    "github-action",
+    "cli"
+  ],
+  "author": "Shishir Mishra <contact@korixinc.com> (https://korixinc.com)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/korixinc/llms-txt-lint.git"
+  },
+  "bugs": {
+    "url": "https://github.com/korixinc/llms-txt-lint/issues"
+  },
+  "homepage": "https://github.com/korixinc/llms-txt-lint#readme"
+}
