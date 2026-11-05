@@ -1,7 +1,8 @@
 name: Release
 
-# Publishes to npm when a GitHub release is published.
-# Needs an NPM_TOKEN repository secret (an npm "Automation" or granular token).
+# Publishes to npm when a GitHub release for a full version (v1.2.3) is published.
+# Uses npm trusted publishing (OIDC): no npm token is stored in this repo.
+# Provenance attestations are generated automatically.
 
 on:
   release:
@@ -20,9 +21,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: 'https://registry.npmjs.org'
+      - name: Use npm with trusted publishing support (11.5.1+)
+        run: npm install -g npm@^11.5.1 && npm --version
       - run: npm test
-      - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --access public
