@@ -104,12 +104,31 @@ const rules = [
       for (const s of doc.sections) {
         for (const i of s.items) {
           if (i.type === 'list') {
-            out.push({ line: i.line, message: 'List item is not in "- [name](url): notes" form.' });
+            // Only flag items that look like an attempted link. Plain bullet
+            // text is reported (as a warning) by section-plain-items instead.
+            if (/\[|\]\(|https?:\/\//.test(i.text)) {
+              out.push({ line: i.line, message: 'Malformed link. Use "- [name](url): notes".' });
+            }
           } else if (!i.name.trim()) {
             out.push({ line: i.line, message: 'Link has empty name.' });
           } else if (!i.url) {
             out.push({ line: i.line, message: `Link "${i.name}" has empty URL.` });
           }
+        }
+      }
+      return out;
+    },
+  },
+  {
+    id: 'section-plain-items',
+    severity: 'warning',
+    description: 'File list items should be links. Plain bullet text inside an H2 section is ignored by tools that follow the spec.',
+    check(doc) {
+      const out = [];
+      for (const s of doc.sections) {
+        const plain = s.items.filter((i) => i.type === 'list' && !/\[|\]\(|https?:\/\//.test(i.text));
+        if (plain.length) {
+          out.push({ line: plain[0].line, message: `Section "${s.title}" has ${plain.length} list item${plain.length === 1 ? '' : 's'} without a link. Tools following the spec may skip ${plain.length === 1 ? 'it' : 'them'}.` });
         }
       }
       return out;
