@@ -93,6 +93,7 @@ async function main() {
   if (opts.listRules) {
     const extra = [
       { id: 'link-reachable', severity: 'error', description: 'Linked URLs must respond with a 2xx/3xx status. (--links)' },
+      { id: 'link-blocked', severity: 'warning', description: 'The site refused the automated check (401/403/429/999). Confirm in a browser. (--links)' },
       { id: 'markdown-versions', severity: 'info', description: 'Linked HTML pages should have a .md version. (--markdown)' },
       { id: 'content-type', severity: 'warning', description: 'Remote llms.txt should be served as text/plain or text/markdown. (URLs)' },
       { id: 'redirect', severity: 'info', description: 'Remote llms.txt should not redirect. (URLs)' },
