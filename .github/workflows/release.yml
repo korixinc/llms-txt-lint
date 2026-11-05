@@ -13,6 +13,8 @@ permissions:
 
 jobs:
   publish:
+    # Only full versions (v1.2.3) publish. The moving major tag (v1) does not.
+    if: contains(github.event.release.tag_name, '.')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
