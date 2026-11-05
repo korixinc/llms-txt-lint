@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (Node ${{ matrix.node }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node: [18, 20, 22]
+        include:
+          - os: windows-latest
+            node: 22
+          - os: macos-latest
+            node: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+
+  action:
+    name: Action self test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Valid file passes
+        uses: ./
+        with:
+          path: test/fixtures/valid.txt
+      - name: Broken file fails
+        id: broken
+        continue-on-error: true
+        uses: ./
+        with:
+          path: test/fixtures/broken.txt
+      - name: Assert broken file failed
+        if: steps.broken.outcome != 'failure'
+        run: |
+          echo "Expected the broken fixture to fail"
+          exit 1
+
+  real-world:
+    name: Real world smoke test
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        site: [llmstxt.org, docs.anthropic.com, svelte.dev, korixinc.com]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Lint ${{ matrix.site }}
+        run: node bin/llms-txt-lint.js ${{ matrix.site }} --links || [ $? -eq 1 ]
